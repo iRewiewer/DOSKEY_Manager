@@ -2,7 +2,12 @@
 
 :: Variables ::
 
-:: set np="C:\Program Files\Notepad++\notepad++.exe"
+if exist "C:\Program Files\Notepad++\notepad++.exe" (
+set np="C:\Program Files\Notepad++\notepad++.exe"
+) else (
+set np=notepad
+)
+
 set localpath=%~dp0
 
 :: Print Help Section ::
