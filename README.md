@@ -1,2 +1,3 @@
 # DOSKEY_Manager
-A manager for batch aliases
+
+DOSKEY_Manager is an app for managing aliases in CMD / New Windows Terminal.
