@@ -11,6 +11,9 @@ You can add any and as many aliases to scripts of whatever nature as you want.
 Some default ones have been provided.
 The script will automatically detect if you have notepad++ and use it instead of the classic notepad.
 
+|![](https://imgur.com/9jcIl8j.png)   |  ![](https://imgur.com/YpQCUyV.png)|
+|-------------------------------------|------------------------------------|
+
 # Changelog
 ## v1.0.4.3.6
 + Added a couple more linux aliases
