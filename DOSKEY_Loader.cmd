@@ -1,28 +1,35 @@
 @echo off
 
 :: Variables ::
-
-if exist "C:\Program Files\Notepad++\notepad++.exe" (
 set np="C:\Program Files\Notepad++\notepad++.exe"
-) else (
-set np=notepad
-)
-
 set localpath=%~dp0
 
-:: Print Help Section ::
-
-DOSKEY helpcfg="%localpath%\helpcfg.bat"
+:: Title Sequence ::
+cls
+type "%localpath%\welcome.rew"
+echo.
+echo.
+echo.
 
 :: Aliases ::
 
-DOSKEY ls=dir
-DOSKEY clear=cls
+DOSKEY helpcfg="%localpath%\helpcfg.bat"
+DOSKEY edithelpcfg=%np% "%localpath%\helpcfg.bat"
+DOSKEY aliascfg=%np% "%localpath%\DOSKEY_Loader.cmd"
+DOSKEY welcomecfg=%np% "%localpath%\welcome.rew"
+
+:: Current Hotkeys ::
+
+DOSKEY test=python "C:\Users\%username%\Desktop\test.py"
 
 :: Scripts ::
 
-DOSKEY edithelpcfg=%np% "%localpath%\helpcfg.bat"
-DOSKEY aliascfg=%np% "%localpath%\DOSKEY_Loader.cmd"
+DOSKEY ls=dir
+DOSKEY clear=cls
+DOSKEY pwd=echo^|set /p=%%cd%%^|clip
+DOSKEY cat=type $* %*
 
-REM if you wanna pass arguments to a .py file $* %*
-DOSKEY test=python "path\to\file\file.py" $* %*
+:: Notes ::
+
+:: pass arguments - $* %*
+:: separate doskey commands - $T
