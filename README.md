@@ -12,7 +12,13 @@ Some default ones have been provided.
 The script will automatically detect if you have notepad++ and use it instead of the classic notepad.
 
 # Changelog
+## v1.0.4.3.6
++ Added a couple more linux aliases
++ Added welcome text every time a terminal is opened
++ Added colored help section - 'helpcfg'
+  
 ## v1.0.1.23
 + Added notepad++ detection
+  
 ## v1.0.0.0
 - Initial upload
