@@ -6,10 +6,12 @@ DOSKEY_Manager is an app for managing aliases in CMD / New Windows Terminal.
 Just run setup.cmd and it will localize the app's path to your current directory.
 You can always re-run it if you want to move to another directory.
 
-# Customization
-You can add any and as many aliases to scripts of whatever nature as you want.
-Some default ones have been provided.
-The script will automatically detect if you have notepad++ and use it instead of the classic notepad.
+# Features
++ Adds an ever changing customizable background when using the Windows Terminal. The installation directory contains a 'backgrounds' folder in which you can add / remove any backgrounds (both images and gifs) as you want.
++ Automatic backup to the Windows Terminal settings.json when changing a background.
++ Adds a customizable welcome text when opening the terminal. The installation directory contains a 'welcomeScreens' folder with some premade texts. The only text file read is welcome.txt located in the root directory.
++ Enables you to easily add any and as many aliases to scripts or commands of whatever nature you want. Some default ones have been provided.
+
 
 |![](https://i.imgur.com/LryZzs7.png)   |  ![](https://i.imgur.com/S3UXR9S.png)|
 |-------------------------------------|------------------------------------|
