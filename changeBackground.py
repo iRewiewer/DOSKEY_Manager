@@ -1,5 +1,5 @@
 from json import loads, dumps
-from os import listdir
+from os import listdir, environ
 from shutil import copyfile
 from random import randint
 from argparse import ArgumentParser
@@ -32,7 +32,7 @@ if "__main__" == __name__:
 
     try:
         jsonPath = r"C:\Users\iRewiewer\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-        backgroundsPath = r"G:\Dropbox Stuff\Code\Apps\DOSKEY Manager\backgrounds"
+        backgroundsPath = rf"{environ['doskeyLocalPath']}\backgrounds"
 
         json = loads(open(jsonPath, 'r').read())
         copyfile(jsonPath, rf"{backgroundsPath}\..\settingsBackup.json") # create backup

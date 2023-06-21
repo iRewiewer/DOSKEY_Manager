@@ -21,8 +21,10 @@ CD /D "%~dp0"
 
 :: Enable AutoRun of DOSKEY_Manager when terminal starts ::
 
-set localpath=%~dp0
+set apppath=%~dp0
 set appname=DOSKEY_Loader.bat
 set ext="\"
 
-reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d \""%localpath%%appname%%ext%"
+reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d \""%apppath%%appname%%ext%"
+
+timeout 2 > NUL

@@ -2,7 +2,7 @@
 cls
 
 :: Variables ::
-set localpath=%~dp0
+set doskeyLocalPath=%~dp0
 
 if exist "C:\Program Files\Notepad++\notepad++.exe" (
     set np="C:\Program Files\Notepad++\notepad++.exe"
@@ -15,17 +15,17 @@ if exist "C:\Program Files\Notepad++\notepad++.exe" (
 )
 
 :: Title Sequence ::
-type "%localpath%\welcome.txt"
+type "%doskeyLocalPath%\welcome.txt"
 echo.
 echo.
 echo.
-python "%localpath%\changeBackground.py"
+python "%doskeyLocalPath%\changeBackground.py"
 
 :: CMD Settings ::
-DOSKEY hcfg="%localpath%\helpcfg.bat"
-DOSKEY edit_hcfg=%np% "%localpath%\helpcfg.bat"
-DOSKEY cfg=%np% "%localpath%\DOSKEY_Loader.bat"
-DOSKEY wcfg=%np% "%localpath%\welcome.txt"
+DOSKEY hcfg="%doskeyLocalPath%\helpcfg.bat"
+DOSKEY edit_hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
+DOSKEY cfg=%np% "%doskeyLocalPath%\DOSKEY_Loader.bat"
+DOSKEY wcfg=%np% "%doskeyLocalPath%\welcome.txt"
 DOSKEY version=echo Version 2.09
 
 :: Aliases ::
@@ -41,10 +41,10 @@ DOSKEY cat=type $* %*
 DOSKEY rm=del $* %*
 DOSKEY np=%np% $* %*
 DOSKEY history=echo off $T echo Path to bash history: C:\Users\%username%\.bash_history $T echo. $T echo Bash History: $T type "C:\Users\%username%\.bash_history" $T echo on
-DOSKEY bg=python "%localpath%\changeBackground.py" $* %*
+DOSKEY bg=python "%doskeyLocalPath%\changeBackground.py" $* %*
 
 :: App Shortcuts ::
-DOSKEY viewColors="%localpath%\colors.bat"
+DOSKEY viewColors="%doskeyLocalPath%\colors.bat"
 
 :: Notes ::
 :: pass arguments - $* %*
