@@ -11,10 +11,16 @@ You can add any and as many aliases to scripts of whatever nature as you want.
 Some default ones have been provided.
 The script will automatically detect if you have notepad++ and use it instead of the classic notepad.
 
-|![](https://imgur.com/9jcIl8j.png)   |  ![](https://imgur.com/YpQCUyV.png)|
+|![](https://i.imgur.com/LryZzs7.png)   |  ![](https://i.imgur.com/S3UXR9S.png)|
 |-------------------------------------|------------------------------------|
 
 # Changelog
+## v2.09
++ Added 'version' command
++ Added a bunch of linux-like aliases for existing windows commands
++ Added a background changing script for the Windows Terminal
++ Streamlined installation process
+
 ## v1.0.4.3.6
 + Added a couple more linux aliases
 + Added welcome text every time a terminal is opened
