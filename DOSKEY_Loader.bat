@@ -3,6 +3,7 @@ cls
 
 :: Variables ::
 set doskeyLocalPath=%~dp0
+set version=2.14
 
 if exist "C:\Program Files\Notepad++\notepad++.exe" (
     set np="C:\Program Files\Notepad++\notepad++.exe"
@@ -26,7 +27,7 @@ DOSKEY hcfg="%doskeyLocalPath%\helpcfg.bat"
 DOSKEY edit_hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
 DOSKEY cfg=%np% "%doskeyLocalPath%\DOSKEY_Loader.bat"
 DOSKEY wcfg=%np% "%doskeyLocalPath%\welcome.txt"
-DOSKEY version=echo Version 2.09
+DOSKEY version=echo Version %version%
 
 :: Aliases ::
 DOSKEY ls=dir

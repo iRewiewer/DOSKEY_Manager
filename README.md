@@ -8,6 +8,7 @@ You can always re-run it if you want to move to another directory.
 
 # Features
 + Adds an ever changing customizable background when using the Windows Terminal. The installation directory contains a 'backgrounds' folder in which you can add / remove any backgrounds (both images and gifs) as you want.
++ Ability to change the background via the 'bg' command to a random one. It also detects all folders created inside the 'backgrounds' folder so that you may use 'bg -type \<name of folder>' to choose a random background inside that specific folder.
 + Automatic backup to the Windows Terminal settings.json when changing a background.
 + Adds a customizable welcome text when opening the terminal. The installation directory contains a 'welcomeScreens' folder with some premade texts. The only text file read is welcome.txt located in the root directory.
 + Enables you to easily add any and as many aliases to scripts or commands of whatever nature you want. Some default ones have been provided.
@@ -17,6 +18,9 @@ You can always re-run it if you want to move to another directory.
 |-------------------------------------|------------------------------------|
 
 # Changelog
+## v2.14
++ Added detection for all folders created inside the 'backgrounds' folder so that the user may use 'bg -type \<name of folder>' to choose a random background inside that specific folder.
+
 ## v2.09
 + Added 'version' command
 + Added a bunch of linux-like aliases for existing windows commands
