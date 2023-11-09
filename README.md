@@ -18,6 +18,9 @@ You can always re-run it if you want to move to another directory.
 |-------------------------------------|------------------------------------|
 
 # Changelog
+## v2.2.38.5
++ Added a config for a custom Windows Store (ergo WinTerminal) path.
+* Completely rewrote file loading methods for a more robust and less error prone functionality.
 ## v2.14
 + Added detection for all folders created inside the 'backgrounds' folder so that the user may use 'bg -type \<name of folder>' to choose a random background inside that specific folder.
 

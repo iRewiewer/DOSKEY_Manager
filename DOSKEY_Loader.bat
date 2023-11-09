@@ -3,7 +3,7 @@ cls
 
 :: Variables ::
 set doskeyLocalPath=%~dp0
-set version=2.14
+set version=2.38.5
 
 if exist "C:\Program Files\Notepad++\notepad++.exe" (
     set np="C:\Program Files\Notepad++\notepad++.exe"
