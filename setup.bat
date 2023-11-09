@@ -1,4 +1,5 @@
 @echo off
+setlocal
 
 :: Get Admin Privileges ::
 
@@ -8,9 +9,9 @@ if '%errorlevel%' NEQ '0' (
   goto UACPrompt
 ) else ( goto gotAdmin )
 
-:UACPrompt
-echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-echo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+:UACPromptcho Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+ech
+eo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
 "%temp%\getadmin.vbs" 
 exit /b
 
@@ -21,10 +22,11 @@ CD /D "%~dp0"
 
 :: Enable AutoRun of DOSKEY_Manager when terminal starts ::
 
-set apppath=%~dp0
+set localpath=%~dp0
 set appname=DOSKEY_Loader.bat
 set ext="\"
 
-reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d \""%apppath%%appname%%ext%"
+reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d \""%localpath%%appname%%ext%"
+reg add "HKLM\SOFTWARE\Microsoft\Command Processor" /f /v DoskeyManagerPath /t REG_SZ /d \""%localpath%%appname%%ext%"
 
 timeout 2 > NUL
