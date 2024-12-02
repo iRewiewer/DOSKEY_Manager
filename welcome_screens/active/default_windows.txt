@@ -1,0 +1,2 @@
+Microsoft Windows [Version 10.0.%_random_d_5_%.%_random_d_4_%]
+(c) Microsoft Corporation. All rights reserved.

@@ -1,0 +1,5 @@
+[31m[==================================][0m
+ [92mWelcome, user [91m%_random_d_6_%[92m!
+ [92mYour temporary token: [93m%_random_dmc_12_%
+ [92mActivation code: [93m%_random_mc_5_%
+[31m[==================================][0m[37m

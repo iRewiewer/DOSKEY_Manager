@@ -1,9 +1,12 @@
 @echo off
 cls
 
+:: Enable enhanced batch capabilities
+:: SETLOCAL EnableExtensions EnableDelayedExpansion
+
 :: Variables ::
 set doskeyLocalPath=%~dp0
-set version=2.38.5
+set version=2.3
 
 if exist "C:\Program Files\Notepad++\notepad++.exe" (
     set np="C:\Program Files\Notepad++\notepad++.exe"
@@ -16,18 +19,15 @@ if exist "C:\Program Files\Notepad++\notepad++.exe" (
 )
 
 :: Title Sequence ::
-type "%doskeyLocalPath%\welcome.txt"
-echo.
-echo.
-echo.
-python "%doskeyLocalPath%\changeBackground.py"
+python "%doskeyLocalPath%\display_title.py"
+python "%doskeyLocalPath%\change_background.py"
 
 :: CMD Settings ::
 DOSKEY hcfg="%doskeyLocalPath%\helpcfg.bat"
 DOSKEY edit_hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
 DOSKEY cfg=%np% "%doskeyLocalPath%\DOSKEY_Loader.bat"
 DOSKEY wcfg=%np% "%doskeyLocalPath%\welcome.txt"
-DOSKEY version=echo Version %version%
+DOSKEY version=echo DOSKEY Manager Version %version%
 
 :: Aliases ::
 DOSKEY ls=dir
@@ -43,6 +43,7 @@ DOSKEY rm=del $* %*
 DOSKEY np=%np% $* %*
 DOSKEY history=echo off $T echo Path to bash history: C:\Users\%username%\.bash_history $T echo. $T echo Bash History: $T type "C:\Users\%username%\.bash_history" $T echo on
 DOSKEY bg=python "%doskeyLocalPath%\changeBackground.py" $* %*
+DOSKEY startup=explorer "C:\Users\iRewiewer\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 
 :: App Shortcuts ::
 DOSKEY viewColors="%doskeyLocalPath%\colors.bat"
