@@ -1,6 +1,7 @@
 # DOSKEY_Manager
 
 DOSKEY_Manager is an app for managing aliases in CMD / Windows Terminal.
+It also optionally enhances the Windows Terminal (background/startup text) using Python scripts.
 
 # Setup
 Just run setup.cmd and it will localize the app's path to your current directory.
@@ -29,6 +30,10 @@ To quickly disable DOSKEY_Manager, just rename the 'DOSKEY_Loader.bat' file to a
 |-------------------------------------|------------------------------------|
 
 # Changelog
+## v2.4
++ Added 'disable-cfg' command that will remove the AutoRun entry in the Windows Registry and re-add it on next startup.
++ Added 'uninstall.bat' which will remove all registry entries related to the app. The user can then manually remove the files if desired.
+
 ## v2.3
 + Added support for displaying  a random title
 

@@ -6,7 +6,7 @@ cls
 
 :: Variables ::
 set doskeyLocalPath=%~dp0
-set version=2.3
+set version=2.4
 
 if exist "C:\Program Files\Notepad++\notepad++.exe" (
     set np="C:\Program Files\Notepad++\notepad++.exe"
@@ -23,11 +23,11 @@ python "%doskeyLocalPath%\display_title.py"
 python "%doskeyLocalPath%\change_background.py"
 
 :: CMD Settings ::
-DOSKEY hcfg="%doskeyLocalPath%\helpcfg.bat"
-DOSKEY edit_hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
+DOSKEY help-cfg="%doskeyLocalPath%\helpcfg.bat"
+DOSKEY edit-hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
 DOSKEY cfg=%np% "%doskeyLocalPath%\DOSKEY_Loader.bat"
-DOSKEY wcfg=%np% "%doskeyLocalPath%\welcome.txt"
 DOSKEY version=echo DOSKEY Manager Version %version%
+DOSKEY disable-cfg="%doskeyLocalPath%\disable.bat"
 
 :: Aliases ::
 DOSKEY ls=dir

@@ -1,133 +1,153 @@
 from json import loads, dumps
 from os import walk, getenv, path
 from shutil import copyfile
-from random import randint
+from random import choice
 from argparse import ArgumentParser
+from winreg import OpenKey, HKEY_LOCAL_MACHINE, QueryValueEx, CloseKey
+import os
 
-# Global configuration dictionary
-CONFIG = {}
+
+def print_error(message, e):
+    """Simple error handling function"""
+    print(
+        f"[DOSKEY Manager] {message}.\nCreate issue on GitHub and copy paste this message there.\nError: {e}")
 
 
-# Retrieve the path of the DOSKEY Manager application
-def GetAppFolderPath():
-    from winreg import OpenKey, HKEY_LOCAL_MACHINE, QueryValueEx, CloseKey
-    keyPath = r"SOFTWARE\Microsoft\Command Processor"
+def get_app_folder_path():
+    """Retrieve the path of the DOSKEY Manager application from registry, excluding the filename."""
+    key_path = r"SOFTWARE\Microsoft\Command Processor"
     try:
-        hkey = OpenKey(HKEY_LOCAL_MACHINE, keyPath)
-        pathValue, _ = QueryValueEx(hkey, "DoskeyManagerPath")
+        hkey = OpenKey(HKEY_LOCAL_MACHINE, key_path)
+        path_value, _ = QueryValueEx(hkey, "DoskeyManagerPath")
         CloseKey(hkey)
-        return pathValue[1:-len('DOSKEY_Loader.bat')-1]
+        path_value = path_value.strip('"')
+        return os.path.dirname(path_value)
     except Exception as e:
-        print(f"An error occurred getting app path from registry. Create issue on GitHub and copy paste this message there.\nError: {e}")
+        print_error("An error occurred getting app path from registry", e)
+        return None
 
 
-# Load configuration from a JSON file
-def LoadConfig():
-    global CONFIG
-    configPath = rf"{GetAppFolderPath()}config.json"
-    if(path.exists(configPath)):
-        CONFIG = loads(open(configPath, 'r').read())
+def load_config():
+    """Load configuration from a JSON file, or create default config if missing."""
+    config = {}
+    app_folder = get_app_folder_path()
+    if not app_folder:
+        return
+    config_path = os.path.join(app_folder, "config.json")
+    if path.exists(config_path):
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = loads(f.read())
+        except Exception as e:
+            print_error("An error occurred reading config", e)
     else:
-        CONFIG = {
+        config = {
             "winStoreLocation": "%appdata%\\Local\\Packages"
         }
-
         try:
-            open(configPath, "w").write(dumps(CONFIG, indent=4))
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(dumps(config, indent=4))
         except Exception as e:
-            print(f"Error creating config. Create issue on GitHub and copy paste this message there.\nError: {e}")
+            print_error("An error occurred creating config", e)
+            exit(1)
+
+    return config
 
 
-# Construct the path to the Windows Terminal directory
-def WinTerminalDirectory():
-    if ("%appdata%" in CONFIG["winStoreLocation"]):
-        return CONFIG["winStoreLocation"].replace("%appdata%", getenv('APPDATA')[:-len("Roaming")-1])
-    else:
-        return CONFIG["winStoreLocation"]
+def win_terminal_directory(config):
+    """Construct the path to the Windows Terminal directory."""
+    location = config.get("winStoreLocation", "")
+    if "%appdata%" in location:
+        appdata = getenv('APPDATA')
+        base_appdata = path.dirname(appdata)
+        return location.replace("%appdata%", base_appdata)
+    return location
 
 
-# Change the Windows Terminal background
-def ChangeBackground(backgroundsPath, jsonPath, json, type):
-    images = {}
-    atRoot = True
+def collect_images(backgrounds_path):
+    """Collect images from the backgrounds folder, organizing them by folder."""
+    images = {"random": []}
+    for root, dirs, files in walk(backgrounds_path):
+        folder_key = path.basename(
+            root) if root != backgrounds_path else "root"
+        # Build full paths for each file
+        full_paths = [os.path.join(root, f) for f in files]
+        images.setdefault(folder_key, []).extend(full_paths)
+        images["random"].extend(full_paths)
+    return images
 
+
+def change_background(backgrounds_path, json_path, settings, background_type):
+    """Change the Windows Terminal background."""
     try:
-        # Walk through the backgrounds folder and get the images
-        for item in walk(backgroundsPath):
-            if atRoot == True:
-                atRoot = False
-                rootPath = item[0]
-                folders = item[1]
-                if type not in folders and type != "random":
-                    type = "random"
-                    print(f"Couldn't find a background folder called '{type}'. Changing to a random one.")
-
-                images["root"] = []
-                images["random"] = []
-                for i in item[2]:
-                    images["root"].append(f"{rootPath}\\{i}")
-                    images["random"].append(f"{rootPath}\\{i}")
-            else:
-                rootPath = item[0]
-                folderName = rootPath.split("\\")[-1]
-                images[folderName] = []
-                for i in item[2]:
-                    images[folderName].append(f"{rootPath}\\{i}")
-                    images["random"].append(f"{rootPath}\\{i}")
+        images = collect_images(backgrounds_path)
     except Exception as e:
-        print(f"Error loading images from backgrounds folder. Create issue on GitHub and copy paste this message there.\nError: {e}")
+        print_error(
+            "An error occurred loading images from backgrounds folder", e)
         return False
+
+    if background_type not in images or not images[background_type]:
+        print(
+            f"[DOSKEY Manager] Couldn't find a background folder called '{background_type}'. Changing to random.")
+        background_type = "random"
+
+    current_background = settings.get("profiles", {}).get(
+        "defaults", {}).get("backgroundImage")
+    available_images = images[background_type]
+
+    # If only one image is available, use it directly
+    if len(available_images) == 1:
+        new_background = available_images[0]
+    else:
+        new_background = choice(available_images)
+        # Avoid repeating the current background if possible
+        if current_background in available_images and len(available_images) > 1:
+            while new_background == current_background:
+                new_background = choice(available_images)
 
     try:
-        if ("backgroundImage" in json["profiles"]["defaults"]):
-            currentBackground = json["profiles"]["defaults"]["backgroundImage"]
-        else:
-            currentBackground = None
-        newBackground = images[type][randint(0, len(images[type]) - 1)]
-        while currentBackground == newBackground:
-            newBackground = images[type][randint(0, len(images[type]) - 1)]
-
-        # Update the background image and opacity in the JSON
-        json["profiles"]["defaults"]["backgroundImage"] = newBackground
-        json["profiles"]["defaults"]["backgroundImageOpacity"] = 0.26
-
-        # Write the updated JSON back to the settings file
-        file = dumps(json, indent=4)
-        open(jsonPath, 'w').write(file)
-    except:
-        print(
-            f"Error applying a new background.")
+        settings["profiles"]["defaults"]["backgroundImage"] = new_background
+        settings["profiles"]["defaults"]["backgroundImageOpacity"] = 0.26
+        with open(json_path, 'w', encoding='utf-8') as f:
+            f.write(dumps(settings, indent=4))
+    except Exception as e:
+        print_error("An error occurred applying a new background", e)
         return False
+
     return True
 
 
-# Main application function
-def App():
-    LoadConfig()
+def main():
+    """Main application function."""
+    config = load_config()
+    app_folder = get_app_folder_path()
+    if not app_folder:
+        return
 
-    jsonPath = rf"{WinTerminalDirectory()}\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-    backgroundsPath = rf"{GetAppFolderPath()}backgrounds"
+    terminal_dir = win_terminal_directory(config)
+    json_path = os.path.join(
+        terminal_dir, r"Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json")
+    backgrounds_path = os.path.join(app_folder, "backgrounds")
 
     try:
-        json = loads(open(jsonPath, 'r').read())
-        # Make backup in case of failure
-        copyfile(jsonPath, rf"{GetAppFolderPath()}settingsBackup.json")
+        with open(json_path, 'r', encoding='utf-8') as f:
+            settings = loads(f.read())
+        # Create backup in case of failure
+        backup_path = os.path.join(app_folder, "settings_backup.json")
+        copyfile(json_path, backup_path)
     except Exception as e:
-        print(f"Error reading JSON via background changer script. Create issue on GitHub and copy paste this message there.\nError: {e}")
+        print(
+            f"[DOSKEY Manager] Error reading JSON via background changer script. Create issue on GitHub and copy paste this message there.\nError: {e}")
         return False
 
-    # Parse command-line arguments
     parser = ArgumentParser(prog="bg")
-    parser.add_argument('-type')
+    parser.add_argument('-type', default="random")
     args = parser.parse_args()
 
-    if args.type == None:
-        args.type = "random"
-
-    # Load backup in case of failure
-    if not ChangeBackground(backgroundsPath, jsonPath, json, args.type):
-        copyfile(rf"{GetAppFolderPath()}settingsBackup.json", jsonPath)
+    if not change_background(backgrounds_path, json_path, settings, args.type):
+        backup_path = os.path.join(app_folder, "settings_backup.json")
+        copyfile(backup_path, json_path)
 
 
-if "__main__" == __name__:
-    App()
+if __name__ == "__main__":
+    main()
