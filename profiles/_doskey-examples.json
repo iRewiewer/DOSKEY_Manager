@@ -1,0 +1,16 @@
+{
+    "name": "example",
+    "description": "Example profile schema. Any JSON file in this folder is loaded; copy this file as a starting point.",
+    "aliases": [
+        {
+            "name": "projects",
+            "command": "cd /d \"C:\\Path\\To\\Projects\"",
+            "help": "Jump to a local projects folder."
+        },
+        {
+            "name": "editnotes",
+            "command": "\"{notepad}\" \"%USERPROFILE%\\notes.txt\"",
+            "help": "Open a notes file with the configured editor."
+        }
+    ]
+}

@@ -1,0 +1,166 @@
+{
+    "name": "core",
+    "description": "Portable DOSKEY Manager commands and general CMD aliases.",
+    "aliases": [
+        {
+            "name": "{commandPrefix}",
+            "command": "\"{manager}\" $*",
+            "help": "Run the DOSKEY Manager command suite."
+        },
+        {
+            "name": "{commandPrefix}help",
+            "command": "\"{manager}\" help",
+            "help": "Show DOSKEY Manager help."
+        },
+        {
+            "name": "{commandPrefix}status",
+            "command": "\"{manager}\" status",
+            "help": "Show install, config, and profile status."
+        },
+        {
+            "name": "{commandPrefix}cfg",
+            "command": "code \"{app}\\config.json\"",
+            "help": "Open DOSKEY Manager config."
+        },
+        {
+            "name": "{commandPrefix}aliases",
+            "command": "code \"{profiles}\"",
+            "help": "Open the profiles folder."
+        },
+        {
+            "name": "{commandPrefix}profiles",
+            "command": "code \"{profiles}\"",
+            "help": "Open the profiles folder."
+        },
+        {
+            "name": "{commandPrefix}order",
+            "command": "code \"{app}\\profiles.json\"",
+            "help": "Open the shipped profile load order."
+        },
+        {
+            "name": "{commandPrefix}loader",
+            "command": "code \"{loader}\"",
+            "help": "Open the startup loader batch file."
+        },
+        {
+            "name": "{commandPrefix}enable",
+            "command": "\"{manager}\" enable",
+            "help": "Re-enable DOSKEY Manager after a soft disable."
+        },
+        {
+            "name": "{commandPrefix}disable",
+            "command": "\"{manager}\" disable",
+            "help": "Soft-disable DOSKEY Manager startup."
+        },
+        {
+            "name": "{commandPrefix}uninstall",
+            "command": "\"{manager}\" uninstall",
+            "help": "Remove the user AutoRun hook."
+        },
+        {
+            "name": "helpcfg",
+            "command": "\"{manager}\" help",
+            "help": "Legacy alias for DOSKEY Manager help."
+        },
+        {
+            "name": "hcfg",
+            "command": "\"{manager}\" help",
+            "help": "Legacy short help alias."
+        },
+        {
+            "name": "cfg",
+            "command": "code \"{app}\\config.json\"",
+            "help": "Open DOSKEY Manager config."
+        },
+        {
+            "name": "ecfg",
+            "command": "code \"{loader}\"",
+            "help": "Open the loader batch file."
+        },
+        {
+            "name": "version",
+            "command": "\"{manager}\" version",
+            "help": "Print DOSKEY Manager version."
+        },
+        {
+            "name": "bg",
+            "command": "\"{manager}\" bg $*",
+            "help": "Change Windows Terminal background by group."
+        },
+        {
+            "name": "ls",
+            "command": "dir $*",
+            "help": "List directory contents."
+        },
+        {
+            "name": "clear",
+            "command": "cls",
+            "help": "Clear the screen."
+        },
+        {
+            "name": "mv",
+            "command": "move $*",
+            "help": "Move files or folders."
+        },
+        {
+            "name": "cp",
+            "command": "copy $*",
+            "help": "Copy files."
+        },
+        {
+            "name": "cpy",
+            "command": "copy $*",
+            "help": "Copy files."
+        },
+        {
+            "name": "pwd",
+            "command": "echo^|set /p=%%cd%%^|clip",
+            "help": "Copy the current path to clipboard."
+        },
+        {
+            "name": "nc",
+            "command": "ncat $*",
+            "help": "Run ncat."
+        },
+        {
+            "name": "unzip",
+            "command": "tar -xf $*",
+            "help": "Extract an archive."
+        },
+        {
+            "name": "cat",
+            "command": "type $*",
+            "help": "Print file contents."
+        },
+        {
+            "name": "rm",
+            "command": "del $*",
+            "help": "Delete files using cmd del."
+        },
+        {
+            "name": "np",
+            "command": "\"{notepad}\" $*",
+            "help": "Open a file in Notepad++ when available."
+        },
+        {
+            "name": "history",
+            "command": "echo off $T echo Path to bash history: C:\\Users\\%username%\\.bash_history $T echo. $T echo Bash History: $T type \"C:\\Users\\%username%\\.bash_history\" $T echo on",
+            "help": "Print bash history."
+        },
+        {
+            "name": "startup",
+            "command": "explorer \"%%APPDATA%%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"",
+            "help": "Open the Startup folder."
+        },
+        {
+            "name": "s",
+            "command": "shutdown /a",
+            "help": "Abort a pending shutdown."
+        },
+        {
+            "name": "viewColors",
+            "command": "\"{app}\\tools\\colors.bat\"",
+            "help": "Show ANSI color examples."
+        }
+    ]
+}

@@ -1,3 +1,18 @@
 {
-    "winStoreLocation": "%appdata%\\Local\\Packages"
+    "version": 3,
+    "commandPrefix": "d",
+    "winStoreLocation": "%LOCALAPPDATA%\\Packages",
+    "startup": {
+        "showTitle": true,
+        "changeBackground": true,
+        "backgroundMode": "async"
+    },
+    "terminal": {
+        "packagesPath": "%LOCALAPPDATA%\\Packages",
+        "packageName": "Microsoft.WindowsTerminal_8wekyb3d8bbwe",
+        "backgroundType": "random",
+        "backgroundOpacity": 0.26,
+        "forceCmdDefault": true,
+        "backupRetention": 20
+    }
 }

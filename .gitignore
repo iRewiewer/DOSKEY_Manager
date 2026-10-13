@@ -1,1 +1,8 @@
-settings_backup.json
+profiles/*.local.json
+profiles/*.private.json
+.doskey_manager.disabled
+.terminal_settings.lock
+__pycache__/
+backups/
+*.tmp
+.tmp_*

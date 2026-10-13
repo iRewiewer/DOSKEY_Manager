@@ -1,62 +1,202 @@
-# DOSKEY_Manager
+# DOSKEY Manager
 
-DOSKEY_Manager is an app for managing aliases in CMD / Windows Terminal.
-It also optionally enhances the Windows Terminal (background/startup text) using Python scripts.
+DOSKEY Manager is a small Windows CMD / Windows Terminal startup utility. It loads DOSKEY aliases from JSON profiles, optionally prints a randomized welcome screen, and can rotate the Windows Terminal background on every interactive CMD session.
 
-# Setup
-Just run setup.cmd and it will localize the app's path to your current directory.
-You can always re-run it if you want to move to another directory.
+## Requirements
 
-# Features
-+ Adds an ever changing customizable background when using the Windows Terminal. The installation directory contains a 'backgrounds' folder in which you can add / remove any backgrounds (both images and gifs) as you want (if you want, leave it empty for a blank background).
-+ Ability to change the background via the 'bg' command to a random one. It also detects all folders created inside the 'backgrounds' folder so that you may use 'bg -type \<name of folder>' to choose a random background inside that specific folder.
-+ Automatic backup to the Windows Terminal settings.json when changing a background.
-+ Adds a customizable welcome text when opening the terminal. The installation directory contains a 'welcome_screens' folder with some premade texts. Whatever welcome screen you want applied, add the *.txt file to the 'active' folder located inside the 'welcome_screens' folder (I left a few premades that I like in there). Syntax also supports randomness - use %_random_\<mode>_\<count>_%, where mode represents what is displayed:
-- 'd' digits
-- 'sc' small characters
-- 'bc' big characters'
-- 'mc' mixed characters (small + big)
-- 'dsc' digits + small characters
-- 'dbc' digits + big characters
-- 'dmc' digits + big characters + small characters
-+ Enables you to easily add any and as many aliases to scripts or commands of whatever nature you want. Some default ones have been provided.
+- Windows
+- Python available as `python`
+- Windows Terminal, if you want background rotation
 
-# Known issues
-It seems to interfere with postgres's activation of its database server for some reason.
-To quickly disable DOSKEY_Manager, just rename the 'DOSKEY_Loader.bat' file to anything else and try running postgres again and it should work (for example, you can add '_' before the name). If for some reason it doesn't, you'll have to manually go to "HKLM\SOFTWARE\Microsoft\Command Processor" in the registry editor and delete the entry called 'AutoRun'. You can always restore it later by running the setup.bat again.
+## Setup
 
+Run:
 
-|![](https://i.imgur.com/LryZzs7.png)   |  ![](https://i.imgur.com/S3UXR9S.png)|
-|-------------------------------------|------------------------------------|
+```bat
+setup.bat
+```
 
-# Changelog
-## v2.4
-+ Added 'disable-cfg' command that will remove the AutoRun entry in the Windows Registry and re-add it on next startup.
-+ Added 'uninstall.bat' which will remove all registry entries related to the app. The user can then manually remove the files if desired.
+By default, setup installs the AutoRun hook under the current user:
 
-## v2.3
-+ Added support for displaying  a random title
+```text
+HKCU\Software\Microsoft\Command Processor\AutoRun
+```
 
-## v2.2
-+ Added a config for a custom Windows Store (ergo WinTerminal) path.
-* Completely rewrote file loading methods for a more robust and less error prone functionality.
+The old machine-wide `HKLM` mode is no longer needed for normal use.
 
-## v2.1
-+ Added detection for all folders created inside the 'backgrounds' folder so that the user may use 'bg -type \<name of folder>' to choose a random background inside that specific folder.
+## Commands
 
-## v2.0
-+ Added 'version' command
-+ Added a bunch of linux-like aliases for existing windows commands
-+ Added a background changing script for the Windows Terminal
-+ Streamlined installation process
+After setup, open a new CMD / Windows Terminal session and use:
 
-## v1.2
-+ Added a couple more linux aliases
-+ Added welcome text every time a terminal is opened
-+ Added colored help section - 'helpcfg'
-  
-## v1.1
-+ Added notepad++ detection
-  
-## v1.0
-- Initial upload
+```bat
+d help
+d status
+d aliases
+d bg
+d bg blue
+d disable
+d enable
+d uninstall
+```
+
+The command prefix defaults to `d`. Change `commandPrefix` in `config.json` if you want a different command prefix. The prefix cannot be empty and cannot contain whitespace or `=`.
+
+Legacy aliases such as `hcfg`, `helpcfg`, `cfg`, and `version` are still provided by the core profile.
+
+## Profiles
+
+Profiles live in the `profiles` folder. Each JSON file is one profile:
+
+```json
+{
+    "name": "example",
+    "description": "Example aliases",
+    "aliases": [
+        {
+            "name": "projects",
+            "command": "cd /d \"C:\\Path\\To\\Projects\"",
+            "help": "Jump to a local projects folder."
+        }
+    ]
+}
+```
+
+Load order is controlled by `profiles.json`. Files listed there load first. Any other `*.json` file in `profiles` is discovered automatically and loaded afterward.
+
+Profile files whose names start with `_` or `.` are ignored on purpose. This lets the repository ship examples beside the real profiles without loading them.
+
+Alias names and commands can use placeholders such as `{app}`, `{profiles}`, `{loader}`, `{manager}`, `{notepad}`, and `{commandPrefix}`.
+
+This makes private profiles easy:
+
+1. Create `profiles/my-local-profile.local.json`.
+2. Keep machine-specific paths and private aliases in that file.
+3. Do not add it to `profiles.json`; it will still load automatically.
+
+Reference profiles that should not autoload can stay in `profiles` with an ignored prefix, such as `profiles/_doskey-examples.json`.
+
+## Folder Layout
+
+```text
+assets/
+  backgrounds/          Windows Terminal background images
+  welcome_screens/      Startup text templates
+profiles/               Loaded alias profiles
+  _doskey-examples.json Ignored reference profile
+src/
+  doskey_manager.py     CLI entrypoint used by DOSKEY_Loader.bat
+  doskey_manager_app/   Implementation modules
+tools/                  Helper scripts
+config.json             App settings
+profiles.json           Public profile load order
+DOSKEY_Loader.bat       AutoRun loader and command entrypoint
+setup.bat               Install current-user AutoRun
+disable.bat             Soft-disable startup behavior
+uninstall.bat           Remove current-user AutoRun
+```
+
+## Backgrounds
+
+Background images are grouped by folder under `assets/backgrounds`.
+
+```bat
+d bg
+d bg red
+d bg green
+```
+
+`d bg` chooses a random image. `d bg <folder>` chooses a random image from that background group. Supported image extensions include GIF, PNG, JPG, JPEG, WEBP, and BMP.
+
+Startup background rotation runs asynchronously by default so the prompt becomes usable faster. In `config.json`, `startup.backgroundMode` accepts:
+
+- `async`: update the Windows Terminal background after aliases load
+- `sync`: update the background before the prompt, matching the old blocking behavior
+- `off`: skip automatic background updates
+
+Before changing Windows Terminal settings, DOSKEY Manager writes backups under `backups`.
+
+## Welcome Screens
+
+Welcome screens live under `assets/welcome_screens`. Only files inside `assets/welcome_screens/active` are candidates for startup display.
+
+Templates support random placeholders:
+
+```text
+%_random_d_6_%
+%_random_dmc_12_%
+```
+
+Supported placeholder modes:
+
+- `d`: digits
+- `sc`: lowercase letters
+- `bc`: uppercase letters
+- `mc`: mixed letters
+- `dsc`: digits and lowercase letters
+- `dbc`: digits and uppercase letters
+- `dmc`: digits and mixed letters
+
+## Disable vs Uninstall
+
+`d disable` creates a local marker file and makes startup return silently, while keeping the command entrypoint available. This is useful when another program is confused by AutoRun output.
+
+```bat
+d disable
+d enable
+```
+
+`d disable --hard` removes the user AutoRun hook. `d uninstall` also removes the hook.
+
+```bat
+d disable --hard
+d uninstall
+```
+
+## Notes
+
+Some software launches `cmd.exe` internally and can break if AutoRun prints text or changes terminal settings. DOSKEY Manager skips startup behavior for `cmd /c` calls, which should avoid most of those cases while preserving normal interactive startup behavior.
+
+## Changelog
+
+### v3.0
+
+- Added JSON profile loading from `profiles`.
+- Added configurable command prefixes through `commandPrefix`.
+- Moved startup background rotation to async mode by default.
+- Added `profiles.json` load order with automatic discovery for unlisted profile files.
+- Added ignored profile filenames using `_` or `.` prefixes.
+- Split the Python implementation into focused modules under `src/doskey_manager_app`.
+- Split source, assets, tools, profiles, and backups into separate folders.
+- Folded command dispatch into `DOSKEY_Loader.bat`; removed the separate manager wrapper.
+- Switched setup to current-user AutoRun by default.
+- Added soft-disable mode.
+- Added lock-protected Windows Terminal settings writes and backup rotation.
+
+### v2.4
+
+- Added `disable-cfg`.
+- Added `uninstall.bat`.
+
+### v2.3
+
+- Added random title display.
+
+### v2.2
+
+- Added config support for a custom Windows Terminal package path.
+- Reworked file loading.
+
+### v2.1
+
+- Added background folder detection for `bg -type <folder>`.
+
+### v2.0
+
+- Added `version`.
+- Added Linux-like aliases.
+- Added Windows Terminal background changing.
+- Streamlined installation.
+
+### v1.x
+
+- Initial alias loader, welcome text, color help, and Notepad++ detection.

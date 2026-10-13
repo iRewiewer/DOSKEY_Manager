@@ -1,0 +1,7 @@
+{
+    "profilesDirectory": "profiles",
+    "loadOrder": [
+        "doskey-core.json",
+        "doskey-personal.json"
+    ]
+}

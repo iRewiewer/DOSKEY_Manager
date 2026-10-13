@@ -1,0 +1,26 @@
+{
+    "name": "personal",
+    "description": "Safe-to-commit personal convenience aliases using only user-relative paths.",
+    "aliases": [
+        {
+            "name": "home",
+            "command": "cd /d \"%USERPROFILE%\"",
+            "help": "Jump to the current user's home folder."
+        },
+        {
+            "name": "desktop",
+            "command": "cd /d \"%USERPROFILE%\\Desktop\"",
+            "help": "Jump to the current user's Desktop."
+        },
+        {
+            "name": "downloads",
+            "command": "cd /d \"%USERPROFILE%\\Downloads\"",
+            "help": "Jump to the current user's Downloads."
+        },
+        {
+            "name": "documents",
+            "command": "cd /d \"%USERPROFILE%\\Documents\"",
+            "help": "Jump to the current user's Documents."
+        }
+    ]
+}

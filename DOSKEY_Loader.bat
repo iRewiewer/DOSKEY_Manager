@@ -1,53 +1,23 @@
 @echo off
-cls
 
-:: Enable enhanced batch capabilities
-:: SETLOCAL EnableExtensions EnableDelayedExpansion
-
-:: Variables ::
 set doskeyLocalPath=%~dp0
-set version=2.4
+set aliasFile=%TEMP%\doskey_manager_aliases_%RANDOM%_%RANDOM%.bat
 
-if exist "C:\Program Files\Notepad++\notepad++.exe" (
-    set np="C:\Program Files\Notepad++\notepad++.exe"
-) else (
-    if exist "C:\Program Files (x86)\Notepad++\notepad++.exe" (
-        set np="C:\Program Files (x86)\Notepad++\notepad++.exe"
-    ) else (
-        set np="C:\Windows\notepad.exe"
-    )
+if not "%~1"=="" (
+    python "%doskeyLocalPath%src\doskey_manager.py" %*
+    exit /b %errorlevel%
 )
 
-:: Title Sequence ::
-python "%doskeyLocalPath%\display_title.py"
-python "%doskeyLocalPath%\change_background.py"
+if exist "%doskeyLocalPath%.doskey_manager.disabled" exit /b 0
 
-:: CMD Settings ::
-DOSKEY help-cfg="%doskeyLocalPath%\helpcfg.bat"
-DOSKEY edit-hcfg=%np% "%doskeyLocalPath%\helpcfg.bat"
-DOSKEY cfg=%np% "%doskeyLocalPath%\DOSKEY_Loader.bat"
-DOSKEY version=echo DOSKEY Manager Version %version%
-DOSKEY disable-cfg="%doskeyLocalPath%\disable.bat"
+echo(%CMDCMDLINE% | findstr /i /c:" /c " /c:"/c " >nul
+if %errorlevel% equ 0 exit /b 0
 
-:: Aliases ::
-DOSKEY ls=dir
-DOSKEY clear=cls
-DOSKEY mv=move $* %*
-DOSKEY cp=copy $* %*
-DOSKEY cpy=copy $* %*
-DOSKEY pwd=echo^|set /p=%%cd%%^|clip
-DOSKEY nc=ncat $* %*
-DOSKEY unzip=tar -xf $* %*
-DOSKEY cat=type $* %*
-DOSKEY rm=del $* %*
-DOSKEY np=%np% $* %*
-DOSKEY history=echo off $T echo Path to bash history: C:\Users\%username%\.bash_history $T echo. $T echo Bash History: $T type "C:\Users\%username%\.bash_history" $T echo on
-DOSKEY bg=python "%doskeyLocalPath%\changeBackground.py" $* %*
-DOSKEY startup=explorer "C:\Users\iRewiewer\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+python "%doskeyLocalPath%src\doskey_manager.py" startup --alias-output "%aliasFile%"
 
-:: App Shortcuts ::
-DOSKEY viewColors="%doskeyLocalPath%\colors.bat"
+if exist "%aliasFile%" (
+    call "%aliasFile%"
+    del "%aliasFile%" >nul 2>&1
+)
 
-:: Notes ::
-:: pass arguments - $* %*
-:: separate doskey commands - $T
+start "" /b python "%doskeyLocalPath%src\doskey_manager.py" startup-background >nul 2>&1
